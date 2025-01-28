@@ -4,3 +4,4 @@ sqlalchemy
 flask-sqlalchemy
 passlib
 marshmallow
+requests

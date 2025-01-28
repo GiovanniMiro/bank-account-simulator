@@ -9,7 +9,7 @@ from models.db import db
 blp = Blueprint("Users", "user", description="Operations on the user")
 
 @blp.route("/register")
-def UserRegister(MethodView):
+class UserRegister(MethodView):
 #Using MethodView allows the get or post method to handle GET or POST requests directly,
 #making it an alternative to using @blp.get or @blp.post.
     @blp.arguments(UserRegisterSchema)
@@ -32,3 +32,6 @@ def UserRegister(MethodView):
         db.session.commit()
 
         return {"message": "User successfully created."}, 200
+    
+@blp.route("/user")
+class 

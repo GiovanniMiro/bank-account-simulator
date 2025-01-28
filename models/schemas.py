@@ -5,7 +5,7 @@ class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
-    balance = fields.Numeric(default=0.00)
+    balance = fields.Decimal(default=0.00)
     updated_at = fields.DateTime(dump_only=True)
 
     @validates("password")
