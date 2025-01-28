@@ -2,3 +2,5 @@ flask
 flask-smorest
 sqlalchemy
 flask-sqlalchemy
+passlib
+marshmallow
