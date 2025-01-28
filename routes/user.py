@@ -33,5 +33,22 @@ class UserRegister(MethodView):
 
         return {"message": "User successfully created."}, 200
     
-@blp.route("/user")
-class 
+@blp.route("/users")
+class UsersList(MethodView):
+    @blp.response(201, UserSchema(many=True))
+    def get(self):
+        users = User.query.all()
+        return users
+    
+@blp.route("/user/<int:user_id>")
+class User(MethodView):
+    @blp.response(200, UserSchema)
+    def get(self, user_id):
+        user = User.query.get_or_404(user_id)
+        return user
+
+    def delete(self, user_id):
+        user = User.query.get_or_404(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return {"message": "User deleted."}, 200
