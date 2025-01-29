@@ -6,3 +6,4 @@ blp = Blueprint("Interface", "interface", description="Operations on the app int
 def title():
     return "<p>Bank Account Simulator</p>"
 #Remember to write the interface text in another file in the future.
+

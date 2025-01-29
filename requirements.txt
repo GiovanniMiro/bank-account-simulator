@@ -2,6 +2,10 @@ flask
 flask-smorest
 sqlalchemy
 flask-sqlalchemy
+flask-migrate
+python-dotenv
 passlib
 marshmallow
 requests
+email-validator
+psycopg2
