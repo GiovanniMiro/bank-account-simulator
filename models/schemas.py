@@ -32,6 +32,7 @@ class TransactionSchema(Schema):
     sender_id = fields.Int(required=True)
     receiver_id = fields.Int(required=True)
     amount = fields.Decimal(required=True)
+    sent_at = fields.DateTime(dump_only=True, format="%d/%m/%Y %H:%M:%S")
 
     @validates("amount")
     def amount_validation(self, value):
@@ -40,6 +41,7 @@ class TransactionSchema(Schema):
 class DepositSchema(Schema):
     account_id = fields.Int(required=True)
     amount = fields.Decimal(required=True)
+    deposited_at = fields.DateTime(dump_only=True, format="%d/%m/%Y %H:%M:%S")
 
     @validates("amount")
     def amount_validation(self, value):
