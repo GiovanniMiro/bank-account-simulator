@@ -1,4 +1,6 @@
 from models.db import db
+from models.transaction import TransactionModel
+from models.deposit import DepositModel
 
 class UserModel(db.Model):
 
@@ -14,7 +16,16 @@ class UserModel(db.Model):
     admin_permission = db.Column(db.Boolean, nullable=False, default=False)
 
     #A user can have many sent transactions
-    sent_transactions = db.relationship("TransactionModel", foreign_keys="[Transaction.sender_id]", back_populates="sender")
+    sent_transactions = db.relationship("TransactionModel",
+                                        foreign_keys=[TransactionModel.sender_id],
+                                        back_populates="sender")
     
     #A user can have many received transactions
-    received_transactions = db.relationship("TransactionModel", foreign_keys="[Transaction.receiver_id]", back_populates="receiver")
+    received_transactions = db.relationship("TransactionModel",
+                                            foreign_keys=[TransactionModel.receiver_id],
+                                            back_populates="receiver")
+
+    received_deposits = db.relationship("DepositModel",
+                                        foreign_keys=[DepositModel.account_id],
+                                        back_populates="payee"
+                                        )

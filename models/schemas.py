@@ -1,7 +1,9 @@
 #API Request validation and data serialization/deserialization
 
-from marshmallow import Schema, fields, validates
-from validators import validate_password, validate_email
+from marshmallow import Schema, fields, validates, ValidationError
+from validators import validate_password, validate_email, validate_amount, validate_sender_balance
+from models.user import UserModel
+
 
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -26,3 +28,19 @@ class UserRegisterSchema(UserSchema):
         validate_email(value)
 
 
+class TransactionSchema(Schema):
+    sender_id = fields.Int(required=True)
+    receiver_id = fields.Int(required=True)
+    amount = fields.Decimal(required=True)
+
+    @validates("amount")
+    def amount_validation(self, value):
+        validate_amount(value)
+
+class DepositSchema(Schema):
+    account_id = fields.Int(required=True)
+    amount = fields.Decimal(required=True)
+
+    @validates("amount")
+    def amount_validation(self, value):
+        validate_amount(value)

@@ -1,6 +1,6 @@
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
-from models import UserModel
+from models.user import UserModel
 from passlib.hash import pbkdf2_sha256
 from models.schemas import UserRegisterSchema, UserSchema
 from sqlalchemy import or_
@@ -14,6 +14,8 @@ class UserRegister(MethodView):
 #making it an alternative to using @blp.get or @blp.post.
     @blp.arguments(UserRegisterSchema)
     def post(self, user_data):
+
+        #Move it to the validators module
         if UserModel.query.filter(
             or_(
                 UserModel.username == user_data["username"],
