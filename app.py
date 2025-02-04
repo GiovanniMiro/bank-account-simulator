@@ -4,7 +4,7 @@ from flask import Flask
 from flask_smorest import Api
 from flask_migrate import Migrate
 from sqlalchemy import create_engine
-
+from flask_jwt_extended import JWTManager
 from models.db import db
 
 from routes.interface import blp as InterfaceBlueprint
@@ -21,6 +21,7 @@ def create_app(db_url=None):
     app.config["OPENAPI_VERSION"] = "3.0.3"
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///project.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["JWT_SECRET_KEY"] = "8e3134fbad6946bbc3b28fe995ea711b0e079a0d40d4a80c519cd886579d50a7"
 
     print(f"Using database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
@@ -35,8 +36,9 @@ def create_app(db_url=None):
     db.init_app(app)
 
     migrate = Migrate(app, db)
-
     api = Api(app)
+    jwt = JWTManager(app)
+
 
     @app.before_request
     def create_tables():

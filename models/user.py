@@ -1,6 +1,7 @@
 from models.db import db
 from models.transaction import TransactionModel
 from models.deposit import DepositModel
+from werkzeug.security import check_password_hash
 
 class UserModel(db.Model):
 
@@ -9,7 +10,7 @@ class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(256), nullable=False)
     balance = db.Column(db.Numeric(10,2), nullable=False, default=0.00)
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
@@ -29,3 +30,6 @@ class UserModel(db.Model):
                                         foreign_keys=[DepositModel.account_id],
                                         back_populates="payee"
                                         )
+    
+    def check_password(self, no_hash_password):
+        return check_password_hash(self.password, no_hash_password)

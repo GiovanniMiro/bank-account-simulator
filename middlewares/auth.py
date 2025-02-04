@@ -1,0 +1,1 @@
+#Adicionar um decorador para verificar o status de admin_permission e assim permitir o uso de certas requisições
