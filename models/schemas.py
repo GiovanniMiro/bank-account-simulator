@@ -31,7 +31,7 @@ class UserLoginSchema(Schema):
     password = fields.Str(required=True, load_only=True)
 
 class TransactionSchema(Schema):
-    sender_id = fields.Int(required=True)
+    sender_id = fields.Int(required=True, dump_only=True)
     receiver_id = fields.Int(required=True)
     amount = fields.Decimal(required=True)
     sent_at = fields.DateTime(dump_only=True, format="%d/%m/%Y %H:%M:%S")

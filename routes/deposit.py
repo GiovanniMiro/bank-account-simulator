@@ -8,6 +8,7 @@ from models.deposit import DepositModel
 from models.schemas import DepositSchema
 from marshmallow import ValidationError
 from validators import validate_amount, validate_user
+from middlewares.auth import admin_required
 
 blp = Blueprint("Deposit", "deposits", description="Operations of deposit")
 
@@ -43,8 +44,8 @@ class Deposit(MethodView):
 class DepositList(MethodView):
 
     @blp.response(201, DepositSchema(many=True))
-    #many=True because the response must be a list of objects
     @jwt_required()
+    @admin_required
     def get(self):
         deposits = DepositModel.query.all()
         return deposits
@@ -54,6 +55,7 @@ class UserDeposits(MethodView):
 
     @blp.response(200, DepositSchema(many=True))
     @jwt_required()
+    @admin_required
     def get(self, user_id):
         user_deposits = DepositModel.query.filter(DepositModel.account_id == user_id).all()
 

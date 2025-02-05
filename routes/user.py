@@ -4,6 +4,7 @@ from models.user import UserModel
 from models.schemas import UserRegisterSchema, UserLoginSchema, UserSchema
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token
+from middlewares.auth import admin_required
 from sqlalchemy import or_
 from models.db import db
 
@@ -47,17 +48,19 @@ class UserLogin(MethodView):
         if not user or not user.check_password(user_data["password"]):
             abort(401, message="Invalid email or password.")
 
-        access_token = create_access_token(identity=user.id, fresh=True)
-        refresh_token = create_refresh_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id), fresh=True)
+        refresh_token = create_refresh_token(identity=str(user.id))
         
         return {"access_token": access_token, "refresh_token": refresh_token}
         
+
 
 #Make it only visible for admins    
 @blp.route("/users")
 class UsersList(MethodView):
     @blp.response(201, UserSchema(many=True))
     @jwt_required()
+    @admin_required
     def get(self):
         users = UserModel.query.all()
         return users
@@ -67,11 +70,13 @@ class UsersList(MethodView):
 class User(MethodView):
     @blp.response(200, UserSchema)
     @jwt_required()
+    @admin_required
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         return user
 
     @jwt_required()
+    @admin_required
     def delete(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         db.session.delete(user)
