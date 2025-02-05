@@ -3,7 +3,8 @@ from flask.views import MethodView
 from models.user import UserModel
 from models.schemas import UserRegisterSchema, UserLoginSchema, UserSchema
 from werkzeug.security import generate_password_hash
-from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token
+from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, get_jwt
+from blocklist import BLOCKLIST
 from middlewares.auth import admin_required
 from sqlalchemy import or_
 from models.db import db
@@ -24,7 +25,7 @@ class UserRegister(MethodView):
                 UserModel.email == user_data["email"]
             )
         ).first():
-            abort(409, "A user with this username or email already exists.")
+            abort(409, message="A user with this username or email already exists.")
 
         user = UserModel(
             username=user_data["username"],
@@ -53,9 +54,44 @@ class UserLogin(MethodView):
         
         return {"access_token": access_token, "refresh_token": refresh_token}
         
+@blp.route("/refresh")
+class TokenRefresh(MethodView):
 
+    @jwt_required(refresh=True)
+    def post(self):
+        current_user_id = get_jwt_identity()
+        new_token = create_access_token(identity=current_user_id, fresh=False)
+        #JTI: JWT Token Identifier.
+        jti = get_jwt()["jti"]
+        #Add to the blocklist to prevent its usage.
+        BLOCKLIST.add(jti)
+        return {"access_token": new_token}
 
-#Make it only visible for admins    
+@blp.route("/logout")
+class UserLogout(MethodView):
+    @jwt_required()
+    def post(self):
+        jti = get_jwt()["jti"]
+        BLOCKLIST.add(jti)
+        return {"message": "Successfully logged out."} 
+
+#First admin must be created manually in the database since no admin exists initially.
+@blp.route("/user/<int:user_id>/promote")
+class UserPromote(MethodView):
+    @jwt_required()
+    @admin_required
+    #PATCH requests allow partial changes to a recourse
+    def patch(self, user_id):
+        user = UserModel.query.get_or_404(user_id)
+
+        if user.admin_permission:
+            abort(400, message="User is already an admin.")
+
+        user.admin_permission = True
+        db.session.commit()
+
+        return {"message": f"User {user.username} promoted to admin."}, 200
+
 @blp.route("/users")
 class UsersList(MethodView):
     @blp.response(201, UserSchema(many=True))
@@ -65,7 +101,6 @@ class UsersList(MethodView):
         users = UserModel.query.all()
         return users
 
-#Make it only visible for admins
 @blp.route("/user/<int:user_id>")
 class User(MethodView):
     @blp.response(200, UserSchema)

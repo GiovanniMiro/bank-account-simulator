@@ -5,6 +5,7 @@ from flask_smorest import Api
 from flask_migrate import Migrate
 from sqlalchemy import create_engine
 from flask_jwt_extended import JWTManager
+from blocklist import BLOCKLIST
 from models.db import db
 
 from routes.interface import blp as InterfaceBlueprint
@@ -21,7 +22,7 @@ def create_app(db_url=None):
     app.config["OPENAPI_VERSION"] = "3.0.3"
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///project.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = "8e3134fbad6946bbc3b28fe995ea711b0e079a0d40d4a80c519cd886579d50a7"
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
     print(f"Using database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
@@ -39,6 +40,9 @@ def create_app(db_url=None):
     api = Api(app)
     jwt = JWTManager(app)
 
+    @jwt.token_in_blocklist_loader
+    def check_if_token_in_blocklist(jwt_header, jwt_payload):
+        return jwt_payload["jti"] in BLOCKLIST
 
     @app.before_request
     def create_tables():
