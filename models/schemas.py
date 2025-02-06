@@ -8,6 +8,7 @@ from models.user import UserModel
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required=True)
+    email = fields.Email(required=False)
     password = fields.Str(required=True, load_only=True)
     balance = fields.Decimal(default=0.00)
     admin_permission = fields.Bool(dump_only=True)

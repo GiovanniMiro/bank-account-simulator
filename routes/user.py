@@ -4,6 +4,7 @@ from models.user import UserModel
 from models.schemas import UserRegisterSchema, UserLoginSchema, UserSchema
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, get_jwt
+from validators import validate_user
 from blocklist import BLOCKLIST
 from middlewares.auth import admin_required
 from sqlalchemy import or_
@@ -74,6 +75,24 @@ class UserLogout(MethodView):
         jti = get_jwt()["jti"]
         BLOCKLIST.add(jti)
         return {"message": "Successfully logged out."} 
+
+@blp.route("/info")
+class UserInfo(MethodView):
+    @blp.response(200, UserSchema)
+    @jwt_required()
+    def get(self):
+        current_user_id = get_jwt_identity()
+        validate_user(current_user_id)
+
+        current_user = UserModel.query.get(current_user_id)
+        
+        current_user_info = {
+            "username": current_user.username,
+            "email": current_user.email,
+            "balance": current_user.balance
+        }
+
+        return current_user_info
 
 #First admin must be created manually in the database since no admin exists initially.
 @blp.route("/user/<int:user_id>/promote")
