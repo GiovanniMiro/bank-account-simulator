@@ -8,7 +8,6 @@ from flask_jwt_extended import JWTManager
 from blocklist import BLOCKLIST
 from models.db import db
 
-from routes.interface import blp as InterfaceBlueprint
 from routes.user import blp as UserBlueprint
 from routes.transaction import blp as TransactionBlueprint
 from routes.deposit import blp as DepositBlueprint
@@ -50,7 +49,6 @@ def create_app(db_url=None):
         app.before_request_funcs[None].remove(create_tables)
         db.create_all()
 
-    api.register_blueprint(InterfaceBlueprint)
     api.register_blueprint(UserBlueprint)
     api.register_blueprint(TransactionBlueprint)
     api.register_blueprint(DepositBlueprint)
