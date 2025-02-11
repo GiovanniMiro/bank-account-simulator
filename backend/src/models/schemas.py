@@ -32,8 +32,7 @@ class UserLoginSchema(Schema):
     password = fields.Str(required=True, load_only=True)
 
 class TransactionSchema(Schema):
-    sender_id = fields.Int(required=True, dump_only=True)
-    receiver_id = fields.Int(required=True)
+    receiver_email = fields.Email(required=True)
     amount = fields.Decimal(required=True)
     sent_at = fields.DateTime(dump_only=True, format="%d/%m/%Y %H:%M:%S")
 
@@ -41,11 +40,20 @@ class TransactionSchema(Schema):
     def amount_validation(self, value):
         validate_amount(value)
 
+class AdminTransactionSchema(TransactionSchema):
+    sender_id = fields.Int(required=True, dump_only=True)
+    receiver_id = fields.Int(required=True, dump_only=True)
+
 class DepositSchema(Schema):
-    account_id = fields.Int(required=True)
+    account_email = fields.Email(required=True)
     amount = fields.Decimal(required=True)
     deposited_at = fields.DateTime(dump_only=True, format="%d/%m/%Y %H:%M:%S")
 
     @validates("amount")
     def amount_validation(self, value):
         validate_amount(value)
+        
+class AdminDepositSchema(DepositSchema):
+    account_id = fields.Int(required=True, dump_only=True)
+
+    

@@ -77,7 +77,7 @@ class UserLogout(MethodView):
         return {"message": "Successfully logged out."} 
 
 @blp.route("/info")
-class UserInfo(MethodView):
+class CurrentUserInfo(MethodView):
     @blp.response(200, UserSchema)
     @jwt_required()
     def get(self):

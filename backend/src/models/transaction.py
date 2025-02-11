@@ -9,6 +9,7 @@ class TransactionModel(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
+
     #A transaction has one sender
     sender = db.relationship("UserModel",
                              back_populates="sent_transactions",

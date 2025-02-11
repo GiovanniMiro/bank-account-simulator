@@ -1,11 +1,11 @@
 from flask import jsonify
-from flask_smorest import Blueprint
+from flask_smorest import Blueprint, abort
 from flask.views import MethodView
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.db import db
 from models.user import UserModel
 from models.deposit import DepositModel
-from models.schemas import DepositSchema
+from models.schemas import DepositSchema, AdminDepositSchema
 from marshmallow import ValidationError
 from validators import validate_amount, validate_user
 from middlewares.auth import admin_required
@@ -18,16 +18,17 @@ class Deposit(MethodView):
     @blp.arguments(DepositSchema)
     @jwt_required()
     def post(self, deposit_data):
+        
+        payee = UserModel.query.filter_by(email=deposit_data["account_email"]).first()
+
+        if not payee:
+            abort(404, message="User not found.")
 
         try:
             deposit = DepositModel(
-                account_id = deposit_data["account_id"],
+                account_id = payee.id,
                 amount = deposit_data["amount"]
             )
-
-            validate_user(deposit.account_id)
-
-            payee = UserModel.query.get(deposit.account_id)
 
             payee.balance += deposit.amount
 
@@ -39,11 +40,23 @@ class Deposit(MethodView):
         except ValidationError as e:
             return {"message": str(e)}, 400
 
-
 @blp.route("/deposits")
-class DepositList(MethodView):
+class CurrentUserDeposits(MethodView):
 
     @blp.response(201, DepositSchema(many=True))
+    @jwt_required()
+    def get(self):
+
+        user_id = get_jwt_identity()
+        user_deposits = DepositModel.query.filter(DepositModel.account_id == user_id).all()
+        serialized_deposits = DepositSchema(many=True).dump(user_deposits)
+
+        return jsonify({"deposits": serialized_deposits})
+
+@blp.route("/deposit-list")
+class DepositList(MethodView):
+
+    @blp.response(201, AdminDepositSchema(many=True))
     @jwt_required()
     @admin_required
     def get(self):
