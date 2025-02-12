@@ -2,7 +2,7 @@
 <html lang="en-US">
     <head>
         <title>Bank Account Simulator</title>
-        <link rel="icon" type="image/x-icon" href="src/images/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
         <style>
             body {
                 background-color: rgba(241, 250, 252, 0.884);
@@ -12,23 +12,32 @@
             }
             ul {
                 list-style-type: none;
-                margin: auto;
+                margin: 1px;
                 padding: 1px;
                 overflow: hidden;
+                background-color: rgb(52, 122, 189);
             }
             li {
                 float: inline-start;
+                padding: 10px;
+                background-color: rgba(240, 248, 255, 0.897);
+                margin: 10px;
+                border-style: outset;
+            }
+            li:hover {
+                background-color: rgba(240, 248, 255, 0.507);
             }
             li a {
                 display: block;
                 color: black;
                 text-align: center;
                 padding: 10px;
+                font-size: 110%;
                 text-decoration: none;
             }
             li a:hover {
                 color: black;
-                background-color:rgb(78, 144, 197);
+                background-color:rgb(240, 248, 255, 0.507);
             }
             table {
                 border-spacing: 15px;
@@ -65,7 +74,7 @@
     </head>
     <!--Index page-->
     <body>
-        <h1 style="text-align: center; font-family:Georgia; font-size:300%" > <b> Bank Account Simulator <img src="src/images/coin.gif" alt="Coin animation" style="width:30px;height:30px;"> </b></h1>
+        <h1 style="text-align: center; font-family:Georgia; font-size:300%" > <b> Bank Account Simulator <img src="static/images/coin.gif" alt="Coin animation" style="width:30px;height:30px;"> </b></h1>
         <hr>
         <p style="text-align: center; font-family:Georgia; font-size:110%; color: rgb(0, 0, 0);"> Create accounts and make deposits and transactions between them. </p>
         <hr>
@@ -91,7 +100,7 @@
         </table>
 
         <a href="https://www.linkedin.com/in/giovanni-miro/" target="_blank" style="font-family:Georgia; font-size:90%;"> 
-            <img src="src/images/linkedin_icon.png" alt="LinkedIn logo" style="width:12px;height:12px;"> 
+            <img src="static/images/linkedin_icon.png" alt="LinkedIn logo" style="width:12px;height:12px;"> 
             Giovanni Miro Leite
         </a>
     </body>
