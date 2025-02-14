@@ -23,7 +23,9 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
-    print(f"Using database URL: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    app.config["OPENAPI_URL_PREFIX"] = "/docs"
+    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+    app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
     engine = create_engine(os.getenv("DATABASE_URL"))
 

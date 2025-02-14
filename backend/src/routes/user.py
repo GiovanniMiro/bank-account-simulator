@@ -76,6 +76,23 @@ class UserLogout(MethodView):
         BLOCKLIST.add(jti)
         return {"message": "Successfully logged out."} 
 
+#First admin must be created manually in the database since no admin exists initially.
+@blp.route("/user/<int:user_id>/promote")
+class UserPromote(MethodView):
+    @jwt_required()
+    @admin_required
+    #PATCH requests allow partial changes to a recourse
+    def patch(self, user_id):
+        user = UserModel.query.get_or_404(user_id)
+
+        if user.admin_permission:
+            abort(400, message="User is already an admin.")
+
+        user.admin_permission = True
+        db.session.commit()
+
+        return {"message": f"User {user.username} promoted to admin."}, 200
+
 @blp.route("/info")
 class CurrentUserInfo(MethodView):
     @blp.response(200, UserSchema)
@@ -93,23 +110,6 @@ class CurrentUserInfo(MethodView):
         }
 
         return current_user_info
-
-#First admin must be created manually in the database since no admin exists initially.
-@blp.route("/user/<int:user_id>/promote")
-class UserPromote(MethodView):
-    @jwt_required()
-    @admin_required
-    #PATCH requests allow partial changes to a recourse
-    def patch(self, user_id):
-        user = UserModel.query.get_or_404(user_id)
-
-        if user.admin_permission:
-            abort(400, message="User is already an admin.")
-
-        user.admin_permission = True
-        db.session.commit()
-
-        return {"message": f"User {user.username} promoted to admin."}, 200
 
 @blp.route("/users")
 class UsersList(MethodView):

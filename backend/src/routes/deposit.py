@@ -10,7 +10,7 @@ from marshmallow import ValidationError
 from validators import validate_amount, validate_user
 from middlewares.auth import admin_required
 
-blp = Blueprint("Deposit", "deposits", description="Operations of deposit")
+blp = Blueprint("Deposit", "deposits", description="Deposit operations")
 
 @blp.route("/deposit")
 class Deposit(MethodView):
