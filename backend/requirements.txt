@@ -10,3 +10,4 @@ marshmallow
 requests
 email-validator
 psycopg2
+gunicorn

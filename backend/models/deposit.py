@@ -1,4 +1,4 @@
-from models.db import db
+from backend.models.db import db
 
 class DepositModel(db.Model):
     __tablename__= "deposits"

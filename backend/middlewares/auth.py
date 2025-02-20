@@ -1,9 +1,10 @@
-#Adicionar um decorador para verificar o status de admin_permission e assim permitir o uso de certas requisições
+from functools import wraps
 from flask_smorest import abort
 from flask_jwt_extended import get_jwt_identity
-from models.user import UserModel
+from backend.models.user import UserModel
 
 def admin_required(function):
+    @wraps(function)
     def wrapper(*args, **kwargs):
 
         user_id = get_jwt_identity()

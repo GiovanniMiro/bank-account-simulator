@@ -2,13 +2,13 @@ from flask import jsonify
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.transaction import TransactionModel
-from models.user import UserModel
-from models.schemas import TransactionSchema, AdminTransactionSchema
+from backend.models.transaction import TransactionModel
+from backend.models.user import UserModel
+from backend.models.schemas import TransactionSchema, AdminTransactionSchema
 from marshmallow import ValidationError
-from validators import validate_user, validate_sender_balance
-from middlewares.auth import admin_required
-from models.db import db
+from backend.validators import validate_user, validate_sender_balance
+from backend.middlewares.auth import admin_required
+from backend.models.db import db
 from sqlalchemy import and_
 
 
@@ -54,11 +54,19 @@ class CurrentUserTransactions(MethodView):
     
     @blp.response(200, TransactionSchema(many=True))
     @jwt_required()
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self):
 
         user_id = get_jwt_identity()
         sent_transactions = TransactionModel.query.filter(TransactionModel.sender_id == user_id).all()
         received_transactions = TransactionModel.query.filter(TransactionModel.receiver_id == user_id).all()
+
+        for transaction in sent_transactions:
+            transaction.receiver_email = UserModel.query.get(transaction.receiver_id).email
+
+        for transaction in received_transactions:
+            transaction.receiver_email = UserModel.query.get(transaction.receiver_id).email
+
 
         serialized_sent = TransactionSchema(many=True).dump(sent_transactions)
         serialized_received = TransactionSchema(many=True).dump(received_transactions)

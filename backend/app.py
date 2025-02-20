@@ -5,12 +5,12 @@ from flask_smorest import Api
 from flask_migrate import Migrate
 from sqlalchemy import create_engine
 from flask_jwt_extended import JWTManager
-from blocklist import BLOCKLIST
-from models.db import db
+from .blocklist import BLOCKLIST
+from .models.db import db
 
-from routes.user import blp as UserBlueprint
-from routes.transaction import blp as TransactionBlueprint
-from routes.deposit import blp as DepositBlueprint
+from .routes.user import blp as UserBlueprint
+from .routes.transaction import blp as TransactionBlueprint
+from .routes.deposit import blp as DepositBlueprint
 
 def create_app(db_url=None):
     app = Flask(__name__)
@@ -27,13 +27,17 @@ def create_app(db_url=None):
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-    engine = create_engine(os.getenv("DATABASE_URL"))
-
-    try: 
-        with engine.connect() as connection:
-            print("Connection working with PostgreSQL.")
-    except Exception as e:
-        print(f"Error trying connection: {e}")
+    app.config["API_SPEC_OPTIONS"] = {
+        "components": {
+            "securitySchemes": {
+                "BearerAuth": {
+                    "type": "http",
+                    "scheme": "bearer",
+                    "bearerFormat": "JWT",
+                }
+            }
+        }
+    }
 
     db.init_app(app)
 
@@ -44,6 +48,7 @@ def create_app(db_url=None):
     @jwt.token_in_blocklist_loader
     def check_if_token_in_blocklist(jwt_header, jwt_payload):
         return jwt_payload["jti"] in BLOCKLIST
+
 
     @app.before_request
     def create_tables():
