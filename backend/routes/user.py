@@ -18,8 +18,8 @@ class UserRegister(MethodView):
 #making it an alternative to using @blp.get or @blp.post.
     @blp.arguments(UserRegisterSchema)
     def post(self, user_data):
+        """User register."""
 
-        #Move it to the validators module
         if UserModel.query.filter(
             or_(
                 UserModel.username == user_data["username"],
@@ -44,6 +44,7 @@ class UserLogin(MethodView):
 
     @blp.arguments(UserLoginSchema)
     def post(self, user_data):
+        """User login."""
 
         user = UserModel.query.filter_by(email=user_data["email"]).first()
 
@@ -59,7 +60,10 @@ class UserLogin(MethodView):
 class TokenRefresh(MethodView):
 
     @jwt_required(refresh=True)
+    @blp.doc(security=[{"BearerAuth": []}])
     def post(self):
+        """Access token refresh."""
+
         current_user_id = get_jwt_identity()
         new_token = create_access_token(identity=current_user_id, fresh=False)
         #JTI: JWT Token Identifier.
@@ -71,7 +75,10 @@ class TokenRefresh(MethodView):
 @blp.route("/logout")
 class UserLogout(MethodView):
     @jwt_required()
+    @blp.doc(security=[{"BearerAuth": []}])
     def post(self):
+        """User logout."""
+
         jti = get_jwt()["jti"]
         BLOCKLIST.add(jti)
         return {"message": "Successfully logged out."} 
@@ -84,6 +91,8 @@ class UserPromote(MethodView):
     @blp.doc(security=[{"BearerAuth": []}])
     #PATCH requests allow partial changes to a recourse
     def patch(self, user_id):
+        """Promote a user to admin (Admin permission required)."""
+
         user = UserModel.query.get_or_404(user_id)
 
         if user.admin_permission:
@@ -98,7 +107,10 @@ class UserPromote(MethodView):
 class CurrentUserInfo(MethodView):
     @blp.response(200, UserSchema)
     @jwt_required()
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self):
+        """Get current user info."""
+
         current_user_id = get_jwt_identity()
         validate_user(current_user_id)
 
@@ -117,7 +129,10 @@ class UsersList(MethodView):
     @blp.response(201, UserSchema(many=True))
     @jwt_required()
     @admin_required
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self):
+        """Get a list of all registered users (Admin permission required)."""
+
         users = UserModel.query.all()
         return users
 
@@ -126,7 +141,10 @@ class User(MethodView):
     @blp.response(200, UserSchema)
     @jwt_required()
     @admin_required
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self, user_id):
+        """Get a specific user info (Admin permission required)."""
+
         user = UserModel.query.get_or_404(user_id)
         return user
 

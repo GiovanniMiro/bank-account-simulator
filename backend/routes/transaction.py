@@ -20,7 +20,10 @@ class Transaction(MethodView):
 
     @blp.arguments(TransactionSchema)
     @jwt_required()
+    @blp.doc(security=[{"BearerAuth": []}])
     def post(self, transaction_data):
+        """Execute a transaction."""
+
 
         sender_id = get_jwt_identity()
         sender = UserModel.query.get(sender_id)
@@ -56,6 +59,7 @@ class CurrentUserTransactions(MethodView):
     @jwt_required()
     @blp.doc(security=[{"BearerAuth": []}])
     def get(self):
+        """Get the complete transaction history of the current user."""
 
         user_id = get_jwt_identity()
         sent_transactions = TransactionModel.query.filter(TransactionModel.sender_id == user_id).all()
@@ -82,7 +86,10 @@ class TransactionList(MethodView):
     @blp.response(200, AdminTransactionSchema(many=True))
     @jwt_required()
     @admin_required
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self):
+        """Get the complete transaction history (Admin permission required)."""
+
         transactions = TransactionModel.query.all()
         return transactions
     
@@ -92,13 +99,15 @@ class UserTransactions(MethodView):
     @blp.response(200, AdminTransactionSchema(many=True))
     @jwt_required()
     @admin_required
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self, user_id):
+        """Get the complete deposit history of a specific user (Admin permission required)."""
+
         sent_transactions = TransactionModel.query.filter(TransactionModel.sender_id == user_id).all()
         received_transactions = TransactionModel.query.filter(TransactionModel.receiver_id == user_id).all()
 
         serialized_sent = AdminTransactionSchema(many=True).dump(sent_transactions)
         serialized_received = AdminTransactionSchema(many=True).dump(received_transactions)
-
 
         return jsonify({
             "sent_transactions": serialized_sent,

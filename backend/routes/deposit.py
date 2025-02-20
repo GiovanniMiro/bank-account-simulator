@@ -17,7 +17,9 @@ class Deposit(MethodView):
 
     @blp.arguments(DepositSchema)
     @jwt_required()
+    @blp.doc(security=[{"BearerAuth": []}])
     def post(self, deposit_data):
+        """Deposit funds to a user."""
         
         payee = UserModel.query.filter_by(email=deposit_data["account_email"]).first()
 
@@ -45,7 +47,10 @@ class CurrentUserDeposits(MethodView):
 
     @blp.response(201, DepositSchema(many=True))
     @jwt_required()
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self):
+        """Get the complete deposit history of the current user."""
+
 
         user_id = get_jwt_identity()
         user_deposits = DepositModel.query.filter(DepositModel.account_id == user_id).all()
@@ -59,7 +64,10 @@ class DepositList(MethodView):
     @blp.response(201, AdminDepositSchema(many=True))
     @jwt_required()
     @admin_required
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self):
+        """Get the complete deposit history (Admin permission required)."""
+
         deposits = DepositModel.query.all()
         return deposits
     
@@ -69,7 +77,10 @@ class UserDeposits(MethodView):
     @blp.response(200, DepositSchema(many=True))
     @jwt_required()
     @admin_required
+    @blp.doc(security=[{"BearerAuth": []}])
     def get(self, user_id):
+        """Get the complete deposit history of a specific user (Admin permission required)."""
+
         user_deposits = DepositModel.query.filter(DepositModel.account_id == user_id).all()
 
         serialized_deposits = DepositSchema(many=True).dump(user_deposits)
