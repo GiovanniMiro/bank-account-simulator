@@ -2,9 +2,12 @@
 <html lang="en-US">
     <head>
         <title>Bank Account Simulator</title>
-        <link rel="icon" type="image/x-icon" href="src/images/favicon.ico">
+        <base href="src/">
+        <link rel="icon" type="image/x-icon" href="images/favicon.ico">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-        <meta charset="UTF-8">
+        <meta charset="UTF-8"> 
+        <meta name="keywords" content="HTML, CSS">
+        <meta name="author" content="Giovanni Miro">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             body {
@@ -37,18 +40,7 @@
             li {
                 margin: 10px 0;
             }
-            .menu-item {
-                background-color: rgba(240, 248, 255, 0.897);
-                padding: 15px 30px;
-                border-radius: 25px;
-                text-align: center;
-                transition: background-color 0.1s ease, transform 0.2s ease;
-                box-shadow: 0 7px 6px rgba(0, 0, 0, 0.2);
-            }
-            .menu-item:hover {
-                background-color: rgba(240, 248, 255, 0.507);
-                transform: scale(1.05);
-            }
+    
             a {
                 text-decoration: none;
                 color: black;
@@ -92,6 +84,18 @@
                 border-radius: 5px;
                 outline: none;
             }
+            .menu-item {
+                background-color: rgba(240, 248, 255, 0.897);
+                padding: 15px 30px;
+                border-radius: 25px;
+                text-align: center;
+                transition: background-color 0.1s ease, transform 0.2s ease;
+                box-shadow: 0 7px 6px rgba(0, 0, 0, 0.2);
+            }
+            .menu-item:hover {
+                background-color: rgba(240, 248, 255, 0.507);
+                transform: scale(1.05);
+            }
             .footer {
                 background-color: rgb(239, 241, 131);
                 padding: 10px;
@@ -112,7 +116,7 @@
         </style>
     </head>
     <body>
-        <h1><b>Bank Account Simulator <img src="src/images/coin.gif" alt="Coin animation" style="width:30px;height:30px;"></b></h1>
+        <h1><b>Bank Account Simulator <img src="images/coin.gif" alt="Coin animation" style="width:30px;height:30px;"></b></h1>
         <p>Create accounts and make deposits and transactions between them.</p>
         
         <div class="center-menu">
@@ -130,7 +134,7 @@
         <div class="footer">
             <h2>Get in touch:</h2>
             <a href="https://www.linkedin.com/in/giovanni-miro/" target="_blank">
-                <img src="src/images/linkedin_icon.png" alt="LinkedIn logo" style="width:12px;height:12px;"> 
+                <img src="images/linkedin_icon.png" alt="LinkedIn logo" style="width:12px;height:12px;"> 
                 Giovanni Miro Leite
             </a>
         </div>
