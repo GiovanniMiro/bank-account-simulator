@@ -1,8 +1,8 @@
 #API Request validation and data serialization/deserialization
 
 from marshmallow import Schema, fields, validates, ValidationError
-from backend.validators import validate_password, validate_email, validate_amount, validate_user
-from backend.models.user import UserModel
+from validators import validate_password, validate_email, validate_amount, validate_user
+from models.user import UserModel
 
 
 class UserSchema(Schema):

@@ -1,6 +1,6 @@
-from backend.models.db import db
-from backend.models.transaction import TransactionModel
-from backend.models.deposit import DepositModel
+from models.db import db
+from models.transaction import TransactionModel
+from models.deposit import DepositModel
 from werkzeug.security import check_password_hash
 
 class UserModel(db.Model):

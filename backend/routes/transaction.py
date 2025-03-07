@@ -2,13 +2,13 @@ from flask import jsonify
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.models.transaction import TransactionModel
-from backend.models.user import UserModel
-from backend.models.schemas import TransactionSchema, AdminTransactionSchema
+from models.transaction import TransactionModel
+from models.user import UserModel
+from models.schemas import TransactionSchema, AdminTransactionSchema
 from marshmallow import ValidationError
-from backend.validators import validate_user, validate_sender_balance
-from backend.middlewares.auth import admin_required
-from backend.models.db import db
+from validators import validate_user, validate_sender_balance
+from middlewares.auth import admin_required
+from models.db import db
 from sqlalchemy import and_
 
 

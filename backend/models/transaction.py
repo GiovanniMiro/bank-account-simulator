@@ -1,4 +1,4 @@
-from backend.models.db import db
+from models.db import db
 
 class TransactionModel(db.Model):
     __tablename__ = "transactions"

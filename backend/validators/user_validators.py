@@ -2,8 +2,8 @@ from flask_smorest import abort
 from marshmallow import ValidationError
 from email_validator import validate_email as is_email_valid, EmailNotValidError
 from werkzeug.security import check_password_hash
-from backend.models.user import UserModel
-from backend.models.db import db
+from models.user import UserModel
+from models.db import db
 
 def validate_user(user_id: int):
      if not UserModel.query.get(user_id):

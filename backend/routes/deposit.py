@@ -2,13 +2,13 @@ from flask import jsonify
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.models.db import db
-from backend.models.user import UserModel
-from backend.models.deposit import DepositModel
-from backend.models.schemas import DepositSchema, AdminDepositSchema
+from models.db import db
+from models.user import UserModel
+from models.deposit import DepositModel
+from models.schemas import DepositSchema, AdminDepositSchema
 from marshmallow import ValidationError
-from backend.validators import validate_amount, validate_user
-from backend.middlewares.auth import admin_required
+from validators import validate_amount, validate_user
+from middlewares.auth import admin_required
 
 blp = Blueprint("Deposit", "deposits", description="Deposit operations")
 

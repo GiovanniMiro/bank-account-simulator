@@ -5,12 +5,12 @@ from flask_smorest import Api
 from flask_migrate import Migrate
 from sqlalchemy import create_engine
 from flask_jwt_extended import JWTManager
-from .blocklist import BLOCKLIST
-from .models.db import db
+from blocklist import BLOCKLIST
+from models.db import db
 
-from .routes.user import blp as UserBlueprint
-from .routes.transaction import blp as TransactionBlueprint
-from .routes.deposit import blp as DepositBlueprint
+from routes.user import blp as UserBlueprint
+from routes.transaction import blp as TransactionBlueprint
+from routes.deposit import blp as DepositBlueprint
 
 def create_app(db_url=None):
     app = Flask(__name__)
@@ -44,6 +44,8 @@ def create_app(db_url=None):
     migrate = Migrate(app, db)
     api = Api(app)
     jwt = JWTManager(app)
+
+    print(os.getenv("DATABASE_URL"))
 
     @jwt.token_in_blocklist_loader
     def check_if_token_in_blocklist(jwt_header, jwt_payload):

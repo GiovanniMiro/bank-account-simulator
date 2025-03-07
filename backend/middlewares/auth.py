@@ -1,7 +1,7 @@
 from functools import wraps
 from flask_smorest import abort
 from flask_jwt_extended import get_jwt_identity
-from backend.models.user import UserModel
+from models.user import UserModel
 
 def admin_required(function):
     @wraps(function)

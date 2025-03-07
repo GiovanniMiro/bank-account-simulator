@@ -1,5 +1,5 @@
 from marshmallow import ValidationError
-from backend.models.user import UserModel
+from models.user import UserModel
 
 def validate_amount(amount: float):
       

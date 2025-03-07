@@ -1,14 +1,14 @@
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
-from backend.models.user import UserModel
-from backend.models.schemas import UserRegisterSchema, UserLoginSchema, UserSchema
+from models.user import UserModel
+from models.schemas import UserRegisterSchema, UserLoginSchema, UserSchema
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, get_jwt
-from backend.validators import validate_user
-from backend.blocklist import BLOCKLIST
-from backend.middlewares.auth import admin_required
+from validators import validate_user
+from blocklist import BLOCKLIST
+from middlewares.auth import admin_required
 from sqlalchemy import or_
-from backend.models.db import db
+from models.db import db
 
 blp = Blueprint("Users", "user", description="Operations on the user")
 
