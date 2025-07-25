@@ -1,12 +1,10 @@
 services:
   web:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: .
     ports: 
       - "5000:80"
     volumes:
-      - ./backend:/app
+      - .:/app
     depends_on:
       - db
     env_file:
