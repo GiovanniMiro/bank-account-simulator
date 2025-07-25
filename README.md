@@ -39,14 +39,17 @@ cd bank-account-simulator
 python -m venv .venv
 .venv\Scripts\activate
 ```
+4. Create and configure a PostgreSQL database:
 
-4. Build docker containers:
+- Add the database URL in the .env file
+
+5. Build docker containers:
 
 ```
 docker-compose up --build -d
 ```
 
-7. Run:
+6. Run:
 ``` 
 flask run 
 ```
