@@ -1,2 +1,2 @@
-from validators.user_validators import validate_password, validate_email, validate_user
+from validators.user_validators import validate_password, validate_email_format, validate_user
 from validators.transaction_validators import validate_amount, validate_sender_balance

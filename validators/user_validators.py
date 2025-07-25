@@ -13,10 +13,8 @@ def validate_password(password: str):
     if len(password) < 6:
             raise ValidationError("Password must be at least 6 characters long.")
     
-def validate_email(email: str):
-     try:
-          is_email_valid(email)
-     
-     except EmailNotValidError:
-          raise ValidationError("Email format is not valid.")
-    
+def validate_email_format(email: str):
+    try:
+        is_email_valid(email)
+    except EmailNotValidError:
+        raise ValidationError("Email format is not valid.")

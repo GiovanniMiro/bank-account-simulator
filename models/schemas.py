@@ -1,7 +1,7 @@
 #API Request validation and data serialization/deserialization
 
 from marshmallow import Schema, fields, validates, ValidationError
-from validators import validate_password, validate_email, validate_amount, validate_user
+from validators import validate_password, validate_email_format, validate_amount, validate_user
 from models.user import UserModel
 
 
@@ -16,7 +16,7 @@ class UserSchema(Schema):
 
 
     @validates("password")
-    def password_validation(self, value):
+    def password_validation(self, value, **kwargs):
         validate_password(value)    
 
 class UserRegisterSchema(UserSchema):
@@ -24,8 +24,8 @@ class UserRegisterSchema(UserSchema):
     created_at = fields.DateTime(dump_only=True, format="%d/%m/%Y %H:%M:%S")
 
     @validates("email")
-    def email_validation(self, value):
-        validate_email(value)
+    def email_validation(self, value, **kwargs):
+        validate_email_format(value)
 
 class UserLoginSchema(Schema):
     email = fields.Email(required=True)

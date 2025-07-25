@@ -56,6 +56,6 @@ flask run
 
 ## Where to use it:
 
-http://localhost:5000.
+http://localhost:5000/docs/swagger-ui
 
 
